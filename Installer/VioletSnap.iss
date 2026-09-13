@@ -1,8 +1,8 @@
-#define MyAppName "周天截图"
-#define MyAppEnglishName "ZhouTian Capture"
-#define MyAppVersion "1.0.0"
+#define MyAppName "VioletSnap"
+#define MyAppEnglishName "VioletSnap"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "Zhou Tian"
-#define MyAppExeName "ZhouTianCapture.exe"
+#define MyAppExeName "VioletSnap.exe"
 
 [Setup]
 AppId={{6FE05B7C-D675-4C65-85BD-8A63C5BBC312}
@@ -10,15 +10,15 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-VersionInfoVersion=1.0.0.0
+VersionInfoVersion=1.1.0.0
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription={#MyAppName}安装程序
 VersionInfoCopyright=Copyright © 2026 周天. All rights reserved.
-DefaultDirName={localappdata}\Programs\ZhouTian Capture
+DefaultDirName={localappdata}\Programs\VioletSnap
 DefaultGroupName={#MyAppName}
 OutputDir=..\安装包
-OutputBaseFilename=周天截图_安装程序_v{#MyAppVersion}_x64
-SetupIconFile=Assets\ZhouTianCapture.ico
+OutputBaseFilename=VioletSnap-Setup-v{#MyAppVersion}-x64
+SetupIconFile=Assets\VioletSnap.ico
 WizardImageFile=Assets\WizardImage.bmp
 WizardSmallImageFile=Assets\WizardSmallImage.bmp
 LicenseFile=License.txt
@@ -50,7 +50,12 @@ Name: "chinesesimp"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "创建桌面快捷方式"; GroupDescription: "快捷方式："; Flags: unchecked
-Name: "startup"; Description: "登录 Windows 后自动启动周天截图"; GroupDescription: "启动选项："; Flags: unchecked
+Name: "startup"; Description: "登录 Windows 后自动启动 VioletSnap"; GroupDescription: "启动选项："; Flags: unchecked
+
+[InstallDelete]
+Type: files; Name: "{app}\ZhouTianCapture.exe"
+Type: files; Name: "{group}\周天截图.lnk"
+Type: files; Name: "{autodesktop}\周天截图.lnk"
 
 [Files]
 Source: "..\发布\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.pdb"
@@ -66,7 +71,8 @@ Name: "{group}\卸载{#MyAppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Registry]
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "ZhouTianCapture"; ValueData: """{app}\{#MyAppExeName}"""; Tasks: startup; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "VioletSnap"; ValueData: """{app}\{#MyAppExeName}"""; Tasks: startup; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "ZhouTianCapture"; Flags: deletevalue uninsdeletevalue
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "ScreenshotTool"; Flags: deletevalue uninsdeletevalue
 
 [Run]

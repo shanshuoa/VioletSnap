@@ -157,7 +157,7 @@ public partial class SettingsWindow : Window
     private void OnShowGeneralPage(object sender, RoutedEventArgs e) => ShowSettingsPage(showLanguagePage: false);
     private void OnExportSettings(object sender, RoutedEventArgs e)
     {
-        var dialog = new Microsoft.Win32.SaveFileDialog { Filter = "设置文件 (*.json)|*.json", FileName = "ZhouTianCapture.settings.json" };
+        var dialog = new Microsoft.Win32.SaveFileDialog { Filter = "设置文件 (*.json)|*.json", FileName = "VioletSnap.settings.json" };
         if (dialog.ShowDialog(this) != true) return;
         try
         {

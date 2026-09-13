@@ -43,7 +43,7 @@
         <Grid>
           <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Ellipse Width="8" Height="8" Fill="#FFDFCFFF" Margin="2,0,8,0"/><TextBlock Text="周天截图 · 文字提取" Foreground="#EEFFFFFF" FontSize="12" VerticalAlignment="Center"/>
+            <Ellipse Width="8" Height="8" Fill="#FFDFCFFF" Margin="2,0,8,0"/><TextBlock Text="VioletSnap · 文字提取" Foreground="#EEFFFFFF" FontSize="12" VerticalAlignment="Center"/>
           </StackPanel>
           <StackPanel Grid.Column="1" Orientation="Horizontal">
             <Button Content="—" Style="{StaticResource HeaderButton}" Click="OnMinimize" ToolTip="最小化"/>

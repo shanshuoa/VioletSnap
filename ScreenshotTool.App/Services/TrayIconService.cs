@@ -63,7 +63,7 @@ public sealed class TrayIconService : IDisposable
         _notifyIcon = new NotifyIcon
         {
             Icon = _applicationIcon ?? SystemIcons.Application,
-            Text = "周天截图",
+            Text = "VioletSnap",
             ContextMenuStrip = menu,
             Visible = true
         };
@@ -87,7 +87,7 @@ public sealed class TrayIconService : IDisposable
 
     public void ShowInformation(string message)
     {
-        _notifyIcon?.ShowBalloonTip(2000, "周天截图", message, ToolTipIcon.Info);
+        _notifyIcon?.ShowBalloonTip(2000, "VioletSnap", message, ToolTipIcon.Info);
     }
 
     private static Icon? LoadApplicationIcon()

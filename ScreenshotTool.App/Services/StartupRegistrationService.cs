@@ -11,13 +11,13 @@ public interface IStartupRegistrationService
 public sealed class StartupRegistrationService : IStartupRegistrationService
 {
     private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string ValueName = "ZhouTianCapture";
-    private const string LegacyValueName = "ScreenshotTool";
+    private const string ValueName = "VioletSnap";
+    private static readonly string[] LegacyValueNames = ["ZhouTianCapture", "ScreenshotTool"];
 
     public bool IsEnabled()
     {
         using var key = Registry.CurrentUser.OpenSubKey(RunKeyPath, writable: false);
-        return HasValue(key, ValueName) || HasValue(key, LegacyValueName);
+        return HasValue(key, ValueName) || LegacyValueNames.Any(name => HasValue(key, name));
     }
 
     public void SetEnabled(bool enabled)
@@ -27,14 +27,16 @@ public sealed class StartupRegistrationService : IStartupRegistrationService
         if (!enabled)
         {
             key.DeleteValue(ValueName, throwOnMissingValue: false);
-            key.DeleteValue(LegacyValueName, throwOnMissingValue: false);
+            foreach (var legacyValueName in LegacyValueNames)
+                key.DeleteValue(legacyValueName, throwOnMissingValue: false);
             return;
         }
 
         var executablePath = Environment.ProcessPath;
         if (string.IsNullOrWhiteSpace(executablePath))
             throw new InvalidOperationException("无法获取当前程序路径。");
-        key.DeleteValue(LegacyValueName, throwOnMissingValue: false);
+        foreach (var legacyValueName in LegacyValueNames)
+            key.DeleteValue(legacyValueName, throwOnMissingValue: false);
         key.SetValue(ValueName, $"\"{executablePath}\"", RegistryValueKind.String);
     }
 

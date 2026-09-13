@@ -1,13 +1,13 @@
 <Project>
-  <!-- 周天截图（ZhouTian Capture），由作者周天开发与维护。 -->
+  <!-- VioletSnap，由作者周天开发与维护。 -->
   <PropertyGroup>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
     <Authors>周天</Authors>
     <Company>Zhou Tian</Company>
-    <Product>周天截图</Product>
-    <Description>周天开发的截图、贴图、标注、文字提取与翻译工具。</Description>
+    <Product>VioletSnap</Product>
+    <Description>VioletSnap 是由周天开发的截图、贴图、标注、文字提取与翻译工具。</Description>
     <Copyright>Copyright © 2026 周天. All rights reserved.</Copyright>
     <NeutralLanguage>zh-CN</NeutralLanguage>
   </PropertyGroup>

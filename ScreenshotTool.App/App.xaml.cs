@@ -17,7 +17,7 @@ using ScreenshotTool.Core.Clipboard;
 
 namespace ScreenshotTool.App;
 
-// 周天截图（ZhouTian Capture），由作者周天开发与维护。
+// VioletSnap，由作者周天开发与维护。
 public partial class App : System.Windows.Application
 {
     private static readonly Mutex InstanceMutex;
@@ -34,7 +34,7 @@ public partial class App : System.Windows.Application
     {
         if (!IsFirstInstance)
         {
-            System.Windows.MessageBox.Show("周天截图已在运行，请在系统托盘中使用现有实例。", "周天截图", MessageBoxButton.OK, MessageBoxImage.Information);
+            System.Windows.MessageBox.Show("VioletSnap 已在运行，请在系统托盘中使用现有实例。", "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Information);
             Shutdown();
             return;
         }
@@ -73,7 +73,7 @@ public partial class App : System.Windows.Application
         {
             System.Diagnostics.Debug.WriteLine(exception);
             _services?.GetRequiredService<IAppLogger>().Error("应用程序初始化失败。", exception);
-            System.Windows.MessageBox.Show("程序初始化失败，请查看日志后重试。", "周天截图", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show("程序初始化失败，请查看日志后重试。", "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown(-1);
         }
     }
@@ -129,7 +129,7 @@ public partial class App : System.Windows.Application
         eventArgs.Handled = true;
         System.Windows.MessageBox.Show(
             "本次操作未能完成，截图状态已安全退出。程序仍会继续运行，请重试。",
-            "周天截图",
+            "VioletSnap",
             MessageBoxButton.OK,
             MessageBoxImage.Warning);
     }

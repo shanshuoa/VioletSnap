@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="ScreenshotTool.App/Assets/ZhouTianCaptureIcon.png" width="128" alt="周天截图图标" />
+  <img src="ScreenshotTool.App/Assets/VioletSnapIcon.png" width="128" alt="VioletSnap 图标" />
 </p>
 
-<h1 align="center">周天截图 · ZhouTian Capture</h1>
+<h1 align="center">VioletSnap</h1>
 
 <p align="center">面向 Windows 的截图、贴图、标注、OCR 与翻译工具。</p>
 
@@ -55,7 +55,7 @@ dotnet publish ScreenshotTool.App/ScreenshotTool.App.csproj `
   -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 ```
 
-安装程序脚本位于 `Installer/ZhouTianCapture.iss`，可使用 Inno Setup 6.7 或更高版本编译。
+安装程序脚本位于 `Installer/VioletSnap.iss`，可使用 Inno Setup 6.7 或更高版本编译。
 
 ## 隐私和 API Key
 
@@ -66,10 +66,10 @@ dotnet publish ScreenshotTool.App/ScreenshotTool.App.csproj `
 
 ## 项目信息
 
-- 产品：周天截图（ZhouTian Capture）
+- 产品：VioletSnap
 - 作者及维护者：周天
 - 发布者：Zhou Tian
-- 当前版本：1.0.0
+- 当前版本：1.1.0
 
 为兼容旧版本，项目内部仍保留部分 `ScreenshotTool` 命名空间和本地数据目录名称。
 

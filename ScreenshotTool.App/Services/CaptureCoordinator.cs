@@ -88,7 +88,7 @@ public sealed class CaptureCoordinator
         catch (Exception exception)
         {
             _logger.Error("截图失败。", exception);
-            System.Windows.MessageBox.Show("截图失败，请重试。", "周天截图", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show("截图失败，请重试。", "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {
@@ -167,7 +167,7 @@ public sealed class CaptureCoordinator
             catch (Exception exception)
             {
                 _logger.Error("截图 OCR 失败。", exception);
-                System.Windows.MessageBox.Show("文字提取失败：" + exception.Message, "周天截图", MessageBoxButton.OK, MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show("文字提取失败：" + exception.Message, "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

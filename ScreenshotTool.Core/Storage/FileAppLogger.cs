@@ -30,7 +30,7 @@ public sealed class FileAppLogger : IAppLogger, IDisposable
             lock (_syncRoot)
             {
                 Directory.CreateDirectory(_logDirectory);
-                var path = Path.Combine(_logDirectory, $"ZhouTianCapture_{DateTime.Now:yyyy-MM-dd}.log");
+                var path = Path.Combine(_logDirectory, $"VioletSnap_{DateTime.Now:yyyy-MM-dd}.log");
                 var detail = exception is null ? string.Empty : $"{Environment.NewLine}{exception}";
                 var line = string.Format(
                     CultureInfo.InvariantCulture,

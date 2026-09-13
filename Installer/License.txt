@@ -1,5 +1,5 @@
-周天截图（ZhouTian Capture）开源许可与风险告知
-版本：1.0.0
+VioletSnap 开源许可与风险告知
+版本：1.1.0
 作者及版权人：周天
 发布者：Zhou Tian
 
@@ -7,7 +7,7 @@
 
 一、开源许可
 
-周天截图按照 GNU General Public License Version 3（GPLv3）发布。GPLv3 允许您运行、研究、复制、修改和分发本软件，包括在遵守许可证的前提下进行商业分发。
+VioletSnap 按照 GNU General Public License Version 3（GPLv3）发布。GPLv3 允许您运行、研究、复制、修改和分发本软件，包括在遵守许可证的前提下进行商业分发。
 
 当您向他人分发本软件的原版、修改版或基于本软件形成的衍生版本时，必须遵守 GPLv3，包括但不限于：
 

@@ -69,7 +69,7 @@ public sealed class PinManager : IDisposable
         catch (Exception exception)
         {
             _logger.Error("读取剪贴板贴图失败。", exception);
-            System.Windows.MessageBox.Show("读取剪贴板图片失败，请重试。", "周天截图", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show("读取剪贴板图片失败，请重试。", "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -151,7 +151,7 @@ public sealed class PinManager : IDisposable
         catch (Exception exception)
         {
             _logger.Error("保存贴图失败。", exception);
-            System.Windows.MessageBox.Show("保存图片失败，请重试。", "周天截图", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show("保存图片失败，请重试。", "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -190,7 +190,7 @@ public sealed class PinManager : IDisposable
         catch (Exception exception)
         {
             _logger.Error("OCR 识别失败。", exception);
-            System.Windows.MessageBox.Show("文字提取失败：" + exception.Message, "周天截图", MessageBoxButton.OK, MessageBoxImage.Warning);
+            System.Windows.MessageBox.Show("文字提取失败：" + exception.Message, "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
         finally { _recognizing.Remove(window); }
     }
