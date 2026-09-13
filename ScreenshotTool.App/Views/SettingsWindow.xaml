@@ -1,0 +1,251 @@
+<Window x:Class="ScreenshotTool.App.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="应用设置" Width="760" Height="800"
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FFF5F2FC"
+        FontFamily="Microsoft YaHei UI" TextOptions.TextFormattingMode="Display">
+  <shell:WindowChrome.WindowChrome>
+    <shell:WindowChrome CaptionHeight="42" ResizeBorderThickness="7" CornerRadius="12" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+  </shell:WindowChrome.WindowChrome>
+  <Window.Resources>
+    <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0,0" EndPoint="1,1">
+      <GradientStop Color="#FF4E2A8E" Offset="0"/>
+      <GradientStop Color="#FF7951D6" Offset="0.56"/>
+      <GradientStop Color="#FF9E79EF" Offset="1"/>
+    </LinearGradientBrush>
+    <Style x:Key="FieldLabel" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="#FF352C46"/><Setter Property="FontSize" Value="13"/>
+      <Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Margin" Value="0,0,0,7"/>
+    </Style>
+    <Style x:Key="InputBox" TargetType="Control">
+      <Setter Property="Height" Value="42"/><Setter Property="Padding" Value="12,7"/>
+      <Setter Property="Background" Value="White"/><Setter Property="BorderBrush" Value="#FFD9D0EB"/>
+      <Setter Property="BorderThickness" Value="1"/><Setter Property="FontSize" Value="13"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="TextBox" BasedOn="{StaticResource InputBox}"/>
+    <Style TargetType="PasswordBox" BasedOn="{StaticResource InputBox}"/>
+    <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource PurpleButton}">
+      <Setter Property="Height" Value="40"/><Setter Property="MinWidth" Value="96"/>
+      <Setter Property="Padding" Value="18,0"/><Setter Property="Background" Value="White"/>
+      <Setter Property="Foreground" Value="#FF584C6B"/><Setter Property="BorderBrush" Value="#FFD5CBE8"/>
+      <Setter Property="BorderThickness" Value="1"/><Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource PurplePrimaryButton}">
+      <Setter Property="Height" Value="40"/><Setter Property="MinWidth" Value="96"/><Setter Property="Padding" Value="18,0"/>
+      <Setter Property="Background" Value="#FF7652D5"/><Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderBrush" Value="#FF7652D5"/><Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    <Style x:Key="CompactButton" TargetType="Button" BasedOn="{StaticResource PurpleButton}">
+      <Setter Property="Height" Value="26"/><Setter Property="MinWidth" Value="72"/><Setter Property="Padding" Value="10,0"/>
+      <Setter Property="FontSize" Value="11.5"/><Setter Property="Foreground" Value="#FF6841C6"/><Setter Property="Background" Value="#FFF4EFFF"/>
+    </Style>
+    <Style x:Key="HeaderButton" TargetType="Button">
+      <Setter Property="Width" Value="34"/><Setter Property="Height" Value="30"/>
+      <Setter Property="Foreground" Value="White"/><Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/><Setter Property="FontSize" Value="15"/>
+      <Setter Property="Cursor" Value="Hand"/><Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+        <Border x:Name="Surface" Background="{TemplateBinding Background}" CornerRadius="6">
+          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="Background" Value="#2AFFFFFF"/></Trigger>
+          <Trigger Property="IsPressed" Value="True"><Setter TargetName="Surface" Property="Background" Value="#42FFFFFF"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+    <Style x:Key="HeaderPageButton" TargetType="Button" BasedOn="{StaticResource PurpleButton}">
+      <Setter Property="Height" Value="36"/><Setter Property="MinWidth" Value="104"/><Setter Property="Padding" Value="16,0"/>
+      <Setter Property="Background" Value="#22FFFFFF"/><Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderBrush" Value="#55FFFFFF"/><Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+    </Style>
+  </Window.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions><RowDefinition Height="150"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+    <Border Grid.Row="0" Background="{StaticResource HeaderBrush}" Padding="22,8,18,22" MouseLeftButtonDown="OnHeaderMouseLeftButtonDown">
+      <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="34"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+          <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Ellipse Width="8" Height="8" Fill="#FFDFCFFF" Margin="2,0,8,0"/>
+            <TextBlock Text="周天截图 · 应用设置" Foreground="#EEFFFFFF" FontSize="12" VerticalAlignment="Center"/>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <Button Content="—" Style="{StaticResource HeaderButton}" Click="OnMinimize" ToolTip="最小化"/>
+            <Button Content="×" Style="{StaticResource HeaderButton}" Click="OnClose" ToolTip="关闭" Margin="4,0,0,0"/>
+          </StackPanel>
+        </Grid>
+        <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="12,3,0,0">
+          <TextBlock Text="应用设置" Foreground="White" FontSize="27" FontWeight="SemiBold"/>
+          <TextBlock Text="管理全局快捷键与翻译服务" Foreground="#E9FFFFFF" FontSize="13" Margin="0,9,0,0"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+          <Button x:Name="GeneralPageButton" Content="常规与服务" Style="{StaticResource HeaderPageButton}" Click="OnShowGeneralPage"/>
+          <Button x:Name="LanguagePageButton" Content="互译语言" Style="{StaticResource HeaderPageButton}" Click="OnShowLanguagePage" Margin="8,0,0,0"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="1" Margin="30,-18,30,24">
+      <Border Background="White" BorderBrush="#FFE7E0F1" BorderThickness="1" CornerRadius="12" Padding="26">
+        <Border.Effect><DropShadowEffect Color="#332C164F" BlurRadius="24" ShadowDepth="5" Opacity="0.35"/></Border.Effect>
+        <Grid>
+        <Grid x:Name="GeneralSettingsPage">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><RowDefinition Height="14"/><RowDefinition Height="Auto"/>
+            <RowDefinition Height="14"/><RowDefinition Height="Auto"/><RowDefinition Height="14"/>
+            <RowDefinition Height="Auto"/><RowDefinition Height="14"/><RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+
+          <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Border Width="26" Height="26" CornerRadius="13" Background="#FFEDE6FF" VerticalAlignment="Top">
+              <TextBlock Text="⌨" Foreground="#FF7652D5" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="全局快捷键" Style="{StaticResource FieldLabel}"/>
+              <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                <StackPanel>
+                  <TextBlock Text="截图" Foreground="#FF786D84" FontSize="11.5" Margin="1,0,0,5"/>
+                  <TextBox x:Name="ScreenshotHotkeyBox" IsReadOnly="True" Cursor="Hand" ToolTip="点击后按下新快捷键；按 Delete 可停用"
+                           PreviewKeyDown="OnHotkeyPreviewKeyDown" Tag="Screenshot"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                  <TextBlock Text="贴图" Foreground="#FF786D84" FontSize="11.5" Margin="1,0,0,5"/>
+                  <TextBox x:Name="PinHotkeyBox" IsReadOnly="True" Cursor="Hand" ToolTip="点击后按下新快捷键；按 Delete 可停用"
+                           PreviewKeyDown="OnHotkeyPreviewKeyDown" Tag="Pin"/>
+                </StackPanel>
+              </Grid>
+              <TextBlock x:Name="HotkeyStatusText" Text="点击输入框后直接按下组合键；按 Delete 可停用。" Foreground="#FF81758F" FontSize="10.8" Margin="2,7,0,0"/>
+            </StackPanel>
+          </Grid>
+
+          <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Border Width="26" Height="26" CornerRadius="13" Background="#FFEDE6FF" VerticalAlignment="Top">
+              <TextBlock Text="1" Foreground="#FF7652D5" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="选择服务商" Style="{StaticResource FieldLabel}"/>
+              <ComboBox x:Name="ProviderBox" Style="{StaticResource PurpleComboBox}" SelectionChanged="OnProviderChanged">
+                <ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding DisplayName}"/></DataTemplate></ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+          </Grid>
+
+          <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Border Width="26" Height="26" CornerRadius="13" Background="#FFEDE6FF" VerticalAlignment="Top">
+              <TextBlock Text="2" Foreground="#FF7652D5" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Grid Grid.Column="1">
+              <Grid.ColumnDefinitions><ColumnDefinition Width="1.35*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+              <StackPanel><TextBlock Text="兼容接口 Base URL" Style="{StaticResource FieldLabel}"/><TextBox x:Name="BaseUrlBox"/></StackPanel>
+              <StackPanel Grid.Column="2">
+                <Grid Margin="0,0,0,7"><TextBlock Text="模型 / 推理接入点" Style="{StaticResource FieldLabel}" Margin="0"/>
+                  <Button x:Name="LoadModelsButton" Content="读取模型" Style="{StaticResource CompactButton}" HorizontalAlignment="Right" Click="OnLoadModels"/>
+                </Grid>
+                <ComboBox x:Name="ModelBox" Style="{StaticResource PurpleComboBox}" IsEditable="True" IsTextSearchEnabled="True" StaysOpenOnEdit="True"/>
+                <TextBlock x:Name="ModelStatusText" Foreground="#FF81758F" FontSize="10.5" Margin="2,5,0,0" Text="可手动输入，或使用当前 Key 读取可用模型。" TextTrimming="CharacterEllipsis"/>
+              </StackPanel>
+            </Grid>
+          </Grid>
+
+          <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Border Width="26" Height="26" CornerRadius="13" Background="#FFEDE6FF" VerticalAlignment="Top">
+              <TextBlock Text="3" Foreground="#FF7652D5" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="API Key" Style="{StaticResource FieldLabel}"/>
+              <Grid>
+                <PasswordBox x:Name="ApiKeyBox" Padding="12,7,146,7" PasswordChanged="OnApiKeyPasswordChanged"/>
+                <TextBox x:Name="ApiKeyVisibleBox" Padding="12,7,146,7" Visibility="Collapsed" TextChanged="OnApiKeyTextChanged"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,7,7,7">
+                  <Button x:Name="ClearKeyButton" Content="清除" Style="{StaticResource CompactButton}" MinWidth="60" Margin="0,0,6,0" Click="OnClearApiKey"/>
+                  <Button x:Name="ToggleKeyButton" Content="显示" Style="{StaticResource CompactButton}" MinWidth="60" Click="OnToggleKeyVisibility"/>
+                </StackPanel>
+              </Grid>
+              <TextBlock Text="密钥会使用 Windows 当前用户凭据加密保存；点击清除会立即删除本机保存的密钥。" Foreground="#FF8A8098" FontSize="11.5" Margin="1,7,0,0"/>
+            </StackPanel>
+          </Grid>
+
+          <Border Grid.Row="8" Background="#FFF7F4FD" BorderBrush="#FFE6DDF6" BorderThickness="1" CornerRadius="7" Padding="13,10">
+            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition/></Grid.ColumnDefinitions>
+              <TextBlock Text="i" Foreground="#FF7652D5" FontWeight="Bold" FontSize="15"/>
+              <TextBlock Grid.Column="1" x:Name="ProviderHint" Foreground="#FF665B73" FontSize="12" TextWrapping="Wrap"/>
+            </Grid>
+          </Border>
+
+          <TextBlock Grid.Row="9" Text="隐私提示：提取的文本仅在发起翻译时发送至所选服务商，请遵循对应平台的数据政策。"
+                     Foreground="#FF92899E" FontSize="11" Margin="0,12,0,0" TextWrapping="Wrap"/>
+
+          <StackPanel Grid.Row="11" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="导入设置" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" Click="OnImportSettings"/>
+            <Button Content="导出设置" ToolTip="导出内容不包含 API Key" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" Click="OnExportSettings"/>
+            <Button Content="取消" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" Click="OnCancel"/>
+            <Button Content="保存设置" Style="{StaticResource PrimaryButton}" Click="OnSave"/>
+          </StackPanel>
+        </Grid>
+        <Grid x:Name="LanguageSettingsPage" Visibility="Collapsed">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><RowDefinition Height="26"/><RowDefinition Height="Auto"/>
+            <RowDefinition Height="24"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <StackPanel>
+            <Border Width="48" Height="48" CornerRadius="24" Background="#FFEDE6FF" HorizontalAlignment="Center">
+              <TextBlock Text="译" Foreground="#FF7652D5" FontSize="21" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <TextBlock Text="双向翻译语言" Foreground="#FF352C46" FontSize="21" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,14,0,0"/>
+            <TextBlock Text="选择任意两种语言，程序会识别当前文字属于哪一种，并自动翻译成另一种。"
+                       Foreground="#FF81758F" FontSize="12.5" HorizontalAlignment="Center" Margin="0,7,0,0"/>
+          </StackPanel>
+
+          <Border Grid.Row="2" Background="#FFF9F7FE" BorderBrush="#FFE2D8F5" BorderThickness="1" CornerRadius="10" Padding="22,20">
+            <Grid>
+              <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="72"/><ColumnDefinition/></Grid.ColumnDefinitions>
+              <StackPanel>
+                <TextBlock Text="语言 A" Style="{StaticResource FieldLabel}"/>
+                <ComboBox x:Name="LanguageABox" Style="{StaticResource PurpleComboBox}" SelectionChanged="OnLanguageChanged">
+                  <ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding DisplayName}"/></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+              <Button Grid.Column="1" Content="⇄" Style="{StaticResource PurpleButton}" Width="44" MinWidth="44" Height="40" Padding="0"
+                      HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="OnSwapLanguages" ToolTip="交换两种语言"/>
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="语言 B" Style="{StaticResource FieldLabel}"/>
+                <ComboBox x:Name="LanguageBBox" Style="{StaticResource PurpleComboBox}" SelectionChanged="OnLanguageChanged">
+                  <ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding DisplayName}"/></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+            </Grid>
+          </Border>
+
+          <Border Grid.Row="4" Background="#FFF4EFFF" BorderBrush="#FFDCCFFA" BorderThickness="1" CornerRadius="9" Padding="18,15">
+            <Grid>
+              <Grid.ColumnDefinitions><ColumnDefinition Width="34"/><ColumnDefinition/></Grid.ColumnDefinitions>
+              <TextBlock Text="↔" Foreground="#FF7652D5" FontSize="20" VerticalAlignment="Top"/>
+              <StackPanel Grid.Column="1">
+                <TextBlock x:Name="LanguagePairText" Foreground="#FF493A72" FontSize="14" FontWeight="SemiBold"/>
+                <TextBlock Text="文字识别会依次尝试系统中已安装的两种 OCR 语言包；未安装的语言需要先在 Windows 中添加对应语言功能。"
+                           Foreground="#FF746985" FontSize="11.8" TextWrapping="Wrap" Margin="0,7,0,0"/>
+              </StackPanel>
+            </Grid>
+          </Border>
+
+          <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="取消" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" Click="OnCancel"/>
+            <Button Content="保存设置" Style="{StaticResource PrimaryButton}" Click="OnSave"/>
+          </StackPanel>
+        </Grid>
+        </Grid>
+      </Border>
+    </Grid>
+  </Grid>
+</Window>

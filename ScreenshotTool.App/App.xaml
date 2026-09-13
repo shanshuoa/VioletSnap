@@ -1,0 +1,115 @@
+﻿<Application x:Class="ScreenshotTool.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Startup="OnStartup"
+             Exit="OnExit"
+             DispatcherUnhandledException="OnDispatcherUnhandledException"
+             ShutdownMode="OnExplicitShutdown">
+  <Application.Resources>
+    <SolidColorBrush x:Key="PurpleAccent" Color="#FFB79CFF" />
+    <SolidColorBrush x:Key="PurpleDark" Color="#FF493A72" />
+    <SolidColorBrush x:Key="PurplePrimary" Color="#FF7652D5" />
+    <SolidColorBrush x:Key="PurpleSoft" Color="#FFF1EDFF" />
+    <SolidColorBrush x:Key="PurpleBorder" Color="#FFD8CCFA" />
+    <SolidColorBrush x:Key="PurpleText" Color="#FF5E3DB5" />
+
+    <Style x:Key="PurpleButton" TargetType="Button">
+      <Setter Property="Height" Value="38" />
+      <Setter Property="MinWidth" Value="82" />
+      <Setter Property="Padding" Value="16,0" />
+      <Setter Property="Background" Value="{StaticResource PurpleSoft}" />
+      <Setter Property="Foreground" Value="{StaticResource PurpleText}" />
+      <Setter Property="BorderBrush" Value="{StaticResource PurpleBorder}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="FontFamily" Value="Microsoft YaHei UI" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="7" SnapsToDevicePixels="True">
+              <Grid>
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" />
+                <Border x:Name="InteractionOverlay" Background="Transparent" CornerRadius="6" />
+              </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="InteractionOverlay" Property="Background" Value="#167652D5"/><Setter TargetName="ButtonSurface" Property="BorderBrush" Value="#FFA98BE5"/></Trigger>
+              <Trigger Property="IsPressed" Value="True"><Setter TargetName="InteractionOverlay" Property="Background" Value="#2B7652D5"/></Trigger>
+              <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="ButtonSurface" Property="BorderBrush" Value="#FF493A72"/></Trigger>
+              <Trigger Property="IsEnabled" Value="False"><Setter TargetName="ButtonSurface" Property="Opacity" Value="0.48"/><Setter Property="Cursor" Value="Arrow"/></Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="ToolbarActionButton" TargetType="Button" BasedOn="{StaticResource PurpleButton}">
+      <Setter Property="Width" Value="38"/><Setter Property="MinWidth" Value="38"/><Setter Property="Height" Value="34"/>
+      <Setter Property="Padding" Value="0"/><Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    <Style x:Key="PurplePrimaryButton" TargetType="Button" BasedOn="{StaticResource PurpleButton}">
+      <Setter Property="Background" Value="{StaticResource PurplePrimary}"/><Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderBrush" Value="{StaticResource PurplePrimary}"/><Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style x:Key="PurpleComboBoxItem" TargetType="ComboBoxItem">
+      <Setter Property="Padding" Value="11,8"/><Setter Property="Foreground" Value="#FF41374F"/>
+      <Setter Property="Background" Value="Transparent"/><Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBoxItem">
+        <Border x:Name="ItemSurface" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}"><ContentPresenter VerticalAlignment="Center"/></Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsHighlighted" Value="True"><Setter TargetName="ItemSurface" Property="Background" Value="#FFF1EBFF"/><Setter Property="Foreground" Value="#FF6841C6"/></Trigger>
+          <Trigger Property="IsSelected" Value="True"><Setter TargetName="ItemSurface" Property="Background" Value="#FFE7DCFF"/><Setter Property="Foreground" Value="#FF5C36BA"/><Setter Property="FontWeight" Value="SemiBold"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+    <Style x:Key="PurpleComboBox" TargetType="ComboBox">
+      <Setter Property="Height" Value="42"/><Setter Property="Background" Value="White"/><Setter Property="Foreground" Value="#FF41374F"/>
+      <Setter Property="BorderBrush" Value="#FFD9D0EB"/><Setter Property="BorderThickness" Value="1"/><Setter Property="FontSize" Value="13"/>
+      <Setter Property="FontFamily" Value="Microsoft YaHei UI"/><Setter Property="ItemContainerStyle" Value="{StaticResource PurpleComboBoxItem}"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/><Setter Property="Template"><Setter.Value>
+        <ControlTemplate TargetType="ComboBox">
+          <Grid>
+            <Border x:Name="ComboSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="7"/>
+            <ToggleButton Focusable="False" Background="Transparent" BorderThickness="0" IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+              <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border Background="Transparent"/></ControlTemplate></ToggleButton.Template>
+            </ToggleButton>
+            <ContentPresenter x:Name="ContentSite" Margin="12,0,38,0" VerticalAlignment="Center" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+            <TextBox x:Name="PART_EditableTextBox" Margin="8,4,38,4" Visibility="Hidden" Background="Transparent" BorderThickness="0" Padding="4,0" FontSize="13" Foreground="#FF41374F" VerticalContentAlignment="Center"/>
+            <Border HorizontalAlignment="Right" Width="36" Background="Transparent" IsHitTestVisible="False"><Path Width="10" Height="6" Stretch="Fill" Fill="{StaticResource PurplePrimary}" Data="M 0 0 L 5 5 L 10 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+            <Popup x:Name="PART_Popup" Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{TemplateBinding IsDropDownOpen}" Focusable="False">
+              <Border Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" MinWidth="120" MaxHeight="280" Margin="0,5,0,0" Padding="5" Background="White" BorderBrush="#FFCABAE8" BorderThickness="1" CornerRadius="9">
+                <Border.Effect><DropShadowEffect Color="#552E174F" BlurRadius="18" ShadowDepth="4" Opacity="0.35"/></Border.Effect>
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><ItemsPresenter/></ScrollViewer>
+              </Border>
+            </Popup>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsEditable" Value="True"><Setter TargetName="ContentSite" Property="Visibility" Value="Collapsed"/><Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/></Trigger>
+            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ComboSurface" Property="BorderBrush" Value="#FFA98BE5"/></Trigger>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="ComboSurface" Property="BorderBrush" Value="{StaticResource PurplePrimary}"/><Setter TargetName="ComboSurface" Property="BorderThickness" Value="1.5"/></Trigger>
+            <Trigger Property="IsEnabled" Value="False"><Setter TargetName="ComboSurface" Property="Opacity" Value="0.48"/></Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value></Setter>
+    </Style>
+    <Style TargetType="ContextMenu">
+      <Setter Property="Background" Value="#FFFCFBFF" />
+      <Setter Property="BorderBrush" Value="#FFD7CFF2" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Padding" Value="4" />
+    </Style>
+    <Style TargetType="MenuItem">
+      <Setter Property="Padding" Value="12,7" />
+      <Setter Property="Foreground" Value="{StaticResource PurpleDark}" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style TargetType="ToolTip">
+      <Setter Property="Background" Value="#F2493A72" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="Padding" Value="8,5" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+  </Application.Resources>
+</Application>

@@ -1,0 +1,30 @@
+# Visual Studio / .NET build outputs
+.vs/
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+*.user
+*.suo
+*.pdb
+*.log
+
+# Local build tools and generated packages
+build/
+发布/
+安装包/
+
+# Local settings, credentials and operating-system files
+*.settings.json
+appsettings.local.json
+.env
+.env.*
+!.env.example
+Thumbs.db
+Desktop.ini
+
+# IDE metadata
+.idea/
+.vscode/
+_ReSharper*/
+*.DotSettings.user

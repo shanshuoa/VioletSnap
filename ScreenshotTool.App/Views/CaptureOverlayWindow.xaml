@@ -1,0 +1,62 @@
+﻿<Window x:Class="ScreenshotTool.App.Views.CaptureOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="Manual"
+        Topmost="True"
+        AllowsTransparency="False"
+        Background="Transparent"
+        KeyDown="OnKeyDown"
+        MouseLeftButtonDown="OnMouseLeftButtonDown"
+        MouseMove="OnMouseMove"
+        MouseLeftButtonUp="OnMouseLeftButtonUp"
+        MouseRightButtonUp="OnMouseRightButtonUp">
+  <Grid x:Name="Root" Background="Transparent">
+    <Image x:Name="FrozenDesktop" Stretch="Fill" IsHitTestVisible="False" />
+    <Path x:Name="DimLayer" Fill="#78000000" IsHitTestVisible="False" />
+    <Canvas x:Name="OverlayCanvas">
+      <Line x:Name="HorizontalGuide" IsHitTestVisible="False" Stroke="#CCB79CFF" StrokeThickness="1" StrokeDashArray="5,4" Visibility="Collapsed" />
+      <Line x:Name="VerticalGuide" IsHitTestVisible="False" Stroke="#CCB79CFF" StrokeThickness="1" StrokeDashArray="5,4" Visibility="Collapsed" />
+      <Border x:Name="SelectionBorder" Background="Transparent" BorderBrush="#FFB79CFF" BorderThickness="2"
+              MouseLeftButtonDown="OnSelectionMouseLeftButtonDown" Visibility="Collapsed" />
+      <Ellipse x:Name="TopLeftHandle" Width="12" Height="12" Fill="White" Stroke="#FF7652D5" StrokeThickness="2" MouseLeftButtonDown="OnSelectionMouseLeftButtonDown" Visibility="Collapsed" />
+      <Ellipse x:Name="TopRightHandle" Width="12" Height="12" Fill="White" Stroke="#FF7652D5" StrokeThickness="2" MouseLeftButtonDown="OnSelectionMouseLeftButtonDown" Visibility="Collapsed" />
+      <Ellipse x:Name="BottomLeftHandle" Width="12" Height="12" Fill="White" Stroke="#FF7652D5" StrokeThickness="2" MouseLeftButtonDown="OnSelectionMouseLeftButtonDown" Visibility="Collapsed" />
+      <Ellipse x:Name="BottomRightHandle" Width="12" Height="12" Fill="White" Stroke="#FF7652D5" StrokeThickness="2" MouseLeftButtonDown="OnSelectionMouseLeftButtonDown" Visibility="Collapsed" />
+      <Border x:Name="SizeTip" IsHitTestVisible="False" Background="#DD202020" CornerRadius="3" Padding="6,3" Visibility="Collapsed">
+        <TextBlock x:Name="SizeText" Foreground="White" FontSize="12" />
+      </Border>
+      <Border x:Name="MagnifierPanel" IsHitTestVisible="False" Width="184" Background="#F0202020" BorderBrush="#FFB79CFF" BorderThickness="1" CornerRadius="4" Padding="7" Visibility="Collapsed">
+        <StackPanel>
+          <Grid Width="168" Height="112" ClipToBounds="True">
+            <Image x:Name="MagnifierImage" Width="168" Height="112" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+            <Border BorderBrush="#99FFFFFF" BorderThickness="1" />
+            <Line X1="84" Y1="0" X2="84" Y2="112" Stroke="#FFB79CFF" StrokeThickness="1" />
+            <Line X1="0" Y1="56" X2="168" Y2="56" Stroke="#FFB79CFF" StrokeThickness="1" />
+            <Rectangle Width="8" Height="8" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="White" StrokeThickness="1" Fill="Transparent" />
+          </Grid>
+          <TextBlock x:Name="CoordinateText" Foreground="White" HorizontalAlignment="Center" Margin="0,5,0,2" />
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Border x:Name="ColorSwatch" Width="16" Height="16" BorderBrush="White" BorderThickness="1" Margin="0,0,7,0" />
+            <TextBlock x:Name="RgbText" Foreground="White" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      <Border x:Name="SelectionToolbar" Visibility="Collapsed" Padding="5" CornerRadius="8"
+              Background="#F5FFFFFF" BorderBrush="#FFB79CFF" BorderThickness="1">
+        <Border.Effect>
+          <DropShadowEffect Color="#803F246F" BlurRadius="18" ShadowDepth="4" Opacity="0.55" />
+        </Border.Effect>
+        <StackPanel Orientation="Horizontal">
+          <Button Style="{StaticResource ToolbarActionButton}" Content="提" ToolTip="文字提取" Click="OnToolbarOcrClicked" Margin="0,0,4,0" />
+          <Button Style="{StaticResource ToolbarActionButton}" Content="翻" ToolTip="提取并翻译" Click="OnToolbarTranslateClicked" Margin="0,0,4,0" />
+          <Button Style="{StaticResource ToolbarActionButton}" Content="贴" ToolTip="贴图" Click="OnToolbarPinClicked" Margin="0,0,4,0" />
+          <Button Style="{StaticResource ToolbarActionButton}" Content="复" ToolTip="复制" Click="OnToolbarCopyClicked" Margin="0,0,4,0" />
+          <Button Style="{StaticResource ToolbarActionButton}" Content="存" ToolTip="保存" Click="OnToolbarSaveClicked" />
+        </StackPanel>
+      </Border>
+    </Canvas>
+  </Grid>
+</Window>
