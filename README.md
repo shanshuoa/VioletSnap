@@ -22,6 +22,17 @@
 - Windows 10 或 Windows 11 x64
 - Visual Studio 2022，或 .NET 8 SDK 与 Windows Desktop SDK
 
+## 依赖说明
+
+普通用户直接安装 Release 中的自包含安装包即可，无需另外安装 .NET 或下载 GitHub Packages。
+
+开发和构建源码需要：
+
+- .NET 8 SDK
+- Windows 10/11 SDK 与 WPF Desktop Runtime 工具链
+- `CommunityToolkit.Mvvm` 8.4.0（执行 `dotnet restore` 时由 NuGet 自动恢复）
+- Inno Setup 6.7.3 或更高版本（仅在重新生成安装程序时需要）
+
 ## 构建
 
 ```powershell
