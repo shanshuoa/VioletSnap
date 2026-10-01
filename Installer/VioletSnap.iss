@@ -1,6 +1,6 @@
 #define MyAppName "VioletSnap"
 #define MyAppEnglishName "VioletSnap"
-#define MyAppVersion "1.2.0"
+#define MyAppVersion "1.2.1"
 #define MyAppPublisher "Zhou Tian"
 #define MyAppExeName "VioletSnap.exe"
 
@@ -10,7 +10,7 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-VersionInfoVersion=1.2.0.0
+VersionInfoVersion=1.2.1.0
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription={#MyAppName}安装程序
 VersionInfoCopyright=Copyright © 2026 周天. All rights reserved.

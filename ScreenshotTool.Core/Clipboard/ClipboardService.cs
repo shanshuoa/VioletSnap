@@ -8,6 +8,8 @@ public sealed class ClipboardService : IClipboardService
 {
     public bool ContainsImage() => System.Windows.Clipboard.ContainsImage();
 
+    public bool ContainsText() => System.Windows.Clipboard.ContainsText(TextDataFormat.UnicodeText);
+
     public BitmapSource? GetImage()
     {
         for (var attempt = 1; attempt <= 5; attempt++)
@@ -21,6 +23,25 @@ public sealed class ClipboardService : IClipboardService
                 }
 
                 return image;
+            }
+            catch (COMException) when (attempt < 5)
+            {
+                Thread.Sleep(20 * attempt);
+            }
+        }
+
+        return null;
+    }
+
+    public string? GetText()
+    {
+        for (var attempt = 1; attempt <= 5; attempt++)
+        {
+            try
+            {
+                return System.Windows.Clipboard.ContainsText(TextDataFormat.UnicodeText)
+                    ? System.Windows.Clipboard.GetText(TextDataFormat.UnicodeText)
+                    : null;
             }
             catch (COMException) when (attempt < 5)
             {

@@ -58,18 +58,30 @@ public sealed class PinManager : IDisposable
     {
         try
         {
-            if (!_clipboardService.ContainsImage() || _clipboardService.GetImage() is not { } image)
+            if (_clipboardService.ContainsImage() && _clipboardService.GetImage() is { } image)
             {
-                _trayIcon.ShowInformation("剪贴板中没有可贴出的图片。");
+                Create(image);
                 return;
             }
 
-            Create(image);
+            if (_clipboardService.ContainsText() &&
+                _clipboardService.GetText() is { } text &&
+                !string.IsNullOrWhiteSpace(text))
+            {
+                var textImage = ClipboardTextRenderer.Render(text, out var truncated);
+                Create(textImage);
+                _logger.Information($"已创建文本贴图：Characters={text.Length}, Truncated={truncated}。");
+                if (truncated)
+                    _trayIcon.ShowInformation("文本较长，贴图已按安全长度截断。");
+                return;
+            }
+
+            _trayIcon.ShowInformation("剪贴板中没有可贴出的图片或文字。");
         }
         catch (Exception exception)
         {
             _logger.Error("读取剪贴板贴图失败。", exception);
-            System.Windows.MessageBox.Show("读取剪贴板图片失败，请重试。", "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show("读取剪贴板图片或文字失败，请重试。", "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

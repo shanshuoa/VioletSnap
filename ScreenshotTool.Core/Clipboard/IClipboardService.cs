@@ -7,4 +7,6 @@ public interface IClipboardService
     Task SetImageAsync(BitmapSource image, CancellationToken cancellationToken = default);
     bool ContainsImage();
     BitmapSource? GetImage();
+    bool ContainsText();
+    string? GetText();
 }

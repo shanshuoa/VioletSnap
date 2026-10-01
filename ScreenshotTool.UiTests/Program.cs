@@ -17,6 +17,7 @@ using ScreenshotTool.Core.Ocr;
 using ScreenshotTool.Core.Security;
 using ScreenshotTool.Core.Translation;
 using ScreenshotTool.Core.Capture;
+using ScreenshotTool.Core.Clipboard;
 
 internal static class Program
 {
@@ -51,6 +52,12 @@ internal static class Program
                 dc.DrawText(new FormattedText("ScreenshotTool 自测示例\n拖动贴图，检查工具栏跟随。", System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Microsoft YaHei"), 22, Brushes.Black, 1), new Point(24, 36));
             }
             bitmap.Render(drawing); bitmap.Freeze();
+            var oneLineTextPin = ClipboardTextRenderer.Render("一行文字", out var oneLineTruncated);
+            var multiLineTextPin = ClipboardTextRenderer.Render("第一行\n\n第三行，保留空行。", out var multiLineTruncated);
+            Check(!oneLineTruncated && !multiLineTruncated, "普通剪贴板文本不应被截断");
+            Check(multiLineTextPin.PixelHeight > oneLineTextPin.PixelHeight, "文本贴图必须保留换行和空白段落");
+            Check(ClipboardTextRenderer.Render(new string('字', 15001), out var longTextTruncated).PixelHeight > 0 && longTextTruncated,
+                "超长剪贴板文本必须安全截断并继续生成贴图");
             CheckSelectionGeometry(bitmap);
             var pin = new PinWindow(bitmap, new AnnotationRenderer());
             pin.ShowTranslationResult(new OcrResult { Text = "Test" }, string.Join("\n", Enumerable.Repeat("长译文自测：内容必须完整显示，不能被原图高度裁切。", 100)));
