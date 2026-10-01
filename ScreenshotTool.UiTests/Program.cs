@@ -32,6 +32,7 @@ internal static class Program
             var dictionary = new XElement(ns + "ResourceDictionary", new XAttribute(XNamespace.Xmlns + "x", "http://schemas.microsoft.com/winfx/2006/xaml"), xml.Root!.Element(ns + "Application.Resources")!.Elements());
             application.Resources = (ResourceDictionary)XamlReader.Parse(dictionary.ToString());
             CheckTrayAutoStart();
+            CheckMessageOnlyHotkeys();
             var settings = new FakeSettings();
             var secrets = new SecretStorageService();
             settings.Current.Translation.ApiKeyEncrypted = secrets.Protect("ui-test-placeholder");
@@ -143,6 +144,31 @@ internal static class Program
         item.PerformClick();
         Check(!startup.Enabled, "再次点击开机自启动应删除启动项");
         Console.WriteLine("Tray auto-start toggle checks passed.");
+    }
+    private static void CheckMessageOnlyHotkeys()
+    {
+        using var hotkeys = new HotkeyManager();
+        var registration = hotkeys.Register("Ctrl+Alt+Shift+F11", "Ctrl+Alt+Shift+F12");
+        Check(registration.Success, "测试全局快捷键必须注册成功");
+        var source = (System.Windows.Interop.HwndSource)typeof(HotkeyManager)
+            .GetField("_source", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(hotkeys)!;
+        Check(IsMessageOnlyWindow(source.Handle),
+            "全局快捷键必须使用不受前台窗口和虚拟桌面影响的消息窗口");
+        Console.WriteLine("Message-only global hotkey checks passed.");
+    }
+    private static bool IsMessageOnlyWindow(IntPtr handle)
+    {
+        var current = IntPtr.Zero;
+        while ((current = ScreenshotTool.Core.Win32.NativeMethods.FindWindowEx(
+                   ScreenshotTool.Core.Win32.NativeMethods.HwndMessage,
+                   current,
+                   null,
+                   null)) != IntPtr.Zero)
+        {
+            if (current == handle)
+                return true;
+        }
+        return false;
     }
     private static void CheckSelectionGeometry(BitmapSource bitmap)
     {

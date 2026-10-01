@@ -39,6 +39,20 @@ public partial class App : System.Windows.Application
             return;
         }
 
+        if (eventArgs.Args.Contains("--install-startup-task", StringComparer.OrdinalIgnoreCase))
+        {
+            try
+            {
+                new StartupRegistrationService().SetEnabled(true);
+                Shutdown();
+            }
+            catch
+            {
+                Shutdown(-1);
+            }
+            return;
+        }
+
         try
         {
             _services = CreateServices();

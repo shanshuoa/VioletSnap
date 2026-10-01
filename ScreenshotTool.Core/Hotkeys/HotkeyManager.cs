@@ -32,11 +32,10 @@ public sealed class HotkeyManager : IHotkeyManager
         if (_source is not null) return;
         _source = new HwndSource(new HwndSourceParameters("ScreenshotToolHotkeys")
         {
+            ParentWindow = NativeMethods.HwndMessage,
             Width = 0,
             Height = 0,
-            PositionX = -32000,
-            PositionY = -32000,
-            WindowStyle = unchecked((int)0x80000000)
+            WindowStyle = 0
         });
         _source.AddHook(WndProc);
     }

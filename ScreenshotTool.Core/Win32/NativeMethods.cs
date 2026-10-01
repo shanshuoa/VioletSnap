@@ -7,6 +7,7 @@ namespace ScreenshotTool.Core.Win32;
 
 public static class NativeMethods
 {
+    public static readonly IntPtr HwndMessage = new(-3);
     public const int SmXVirtualScreen = 76;
     public const int SmYVirtualScreen = 77;
     public const int SmCxVirtualScreen = 78;
@@ -94,6 +95,12 @@ public static class NativeMethods
 
     [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW", SetLastError = true)]
     public static extern IntPtr SetWindowLongPtr(IntPtr window, int index, IntPtr value);
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetParent(IntPtr window);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    public static extern IntPtr FindWindowEx(IntPtr parent, IntPtr childAfter, string? className, string? windowName);
 
     [DllImport("dwmapi.dll")]
     public static extern int DwmGetWindowAttribute(IntPtr window, int attribute, out NativeRectangle value, int size);

@@ -21,6 +21,8 @@
 
 - Windows 10 或 Windows 11 x64
 - Visual Studio 2022，或 .NET 8 SDK 与 Windows Desktop SDK
+- 为保证在管理员权限软件上也能可靠触发 F1/F3 并显示截图层，VioletSnap 启动时会请求 Windows 管理员权限。
+- “开机自启动”使用当前用户的最高权限计划任务；UAC 安全桌面、登录界面等受保护桌面不属于可截图范围。
 
 ## 依赖说明
 
@@ -69,7 +71,7 @@ dotnet publish ScreenshotTool.App/ScreenshotTool.App.csproj `
 - 产品：VioletSnap
 - 作者及维护者：周天
 - 发布者：Zhou Tian
-- 当前版本：1.2.1
+- 当前版本：1.3.0
 
 为兼容旧版本，项目内部仍保留部分 `ScreenshotTool` 命名空间和本地数据目录名称。
 
