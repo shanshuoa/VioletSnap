@@ -71,7 +71,7 @@ dotnet publish ScreenshotTool.App/ScreenshotTool.App.csproj `
 - 产品：VioletSnap
 - 作者及维护者：周天
 - 发布者：Zhou Tian
-- 当前版本：1.3.0
+- 当前版本：1.3.1
 
 为兼容旧版本，项目内部仍保留部分 `ScreenshotTool` 命名空间和本地数据目录名称。
 

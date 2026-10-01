@@ -22,8 +22,21 @@ public sealed class StartupRegistrationService : IStartupRegistrationService
         if (RunScheduledTaskCommand(["/Query", "/TN", ScheduledTaskName]) == 0)
             return true;
 
+        bool legacyEnabled;
         using var key = Registry.CurrentUser.OpenSubKey(RunKeyPath, writable: false);
-        return HasValue(key, ValueName) || LegacyValueNames.Any(name => HasValue(key, name));
+        legacyEnabled = HasValue(key, ValueName) || LegacyValueNames.Any(name => HasValue(key, name));
+        if (!legacyEnabled)
+            return false;
+
+        try
+        {
+            SetEnabled(true);
+            return RunScheduledTaskCommand(["/Query", "/TN", ScheduledTaskName]) == 0;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public void SetEnabled(bool enabled)

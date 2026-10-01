@@ -1,6 +1,6 @@
 #define MyAppName "VioletSnap"
 #define MyAppEnglishName "VioletSnap"
-#define MyAppVersion "1.3.0"
+#define MyAppVersion "1.3.1"
 #define MyAppPublisher "Zhou Tian"
 #define MyAppExeName "VioletSnap.exe"
 
@@ -10,7 +10,7 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-VersionInfoVersion=1.3.0.0
+VersionInfoVersion=1.3.1.0
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription={#MyAppName}安装程序
 VersionInfoCopyright=Copyright © 2026 周天. All rights reserved.
@@ -71,7 +71,7 @@ Name: "{group}\卸载{#MyAppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Registry]
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "VioletSnap"; Flags: deletevalue uninsdeletevalue
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "VioletSnap"; Flags: uninsdeletevalue
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "ZhouTianCapture"; Flags: deletevalue uninsdeletevalue
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "ScreenshotTool"; Flags: deletevalue uninsdeletevalue
 

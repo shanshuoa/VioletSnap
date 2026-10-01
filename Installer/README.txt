@@ -1,9 +1,9 @@
-VioletSnap 1.3.0
+VioletSnap 1.3.1
 
 作者：周天
 发布者：Zhou Tian
 
-安装：运行“VioletSnap-Setup-v1.3.0-x64.exe”，按向导完成许可确认及安装选项。
+安装：运行“VioletSnap-Setup-v1.3.1-x64.exe”，按向导完成许可确认及安装选项。
 卸载：可从 Windows“已安装的应用”卸载，也可运行安装目录“卸载程序”文件夹中的 `unins000.exe`；开始菜单同时提供“卸载 VioletSnap”入口。
 为避免误删用户资料，卸载后会保留本机设置；如需移交电脑，请先在应用设置中使用“清除”功能删除 API Key。
 
