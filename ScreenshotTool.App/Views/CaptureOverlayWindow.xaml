@@ -50,6 +50,7 @@
           <DropShadowEffect Color="#803F246F" BlurRadius="18" ShadowDepth="4" Opacity="0.55" />
         </Border.Effect>
         <StackPanel Orientation="Horizontal">
+          <Button x:Name="CaptureAnnotationButton" Style="{StaticResource ToolbarActionButton}" Content="标" ToolTip="贴图并立即标注" Click="OnToolbarAnnotateClicked" Margin="0,0,4,0" />
           <Button Style="{StaticResource ToolbarActionButton}" Content="提" ToolTip="文字提取" Click="OnToolbarOcrClicked" Margin="0,0,4,0" />
           <Button Style="{StaticResource ToolbarActionButton}" Content="翻" ToolTip="提取并翻译" Click="OnToolbarTranslateClicked" Margin="0,0,4,0" />
           <Button Style="{StaticResource ToolbarActionButton}" Content="贴" ToolTip="贴图" Click="OnToolbarPinClicked" Margin="0,0,4,0" />

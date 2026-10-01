@@ -27,6 +27,8 @@ using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using System.Windows.Threading;
 using System.Windows.Media.Effects;
 using System.Globalization;
+using System.Windows.Controls.Primitives;
+using ScreenshotTool.App.Services;
 
 namespace ScreenshotTool.App.Views;
 
@@ -68,6 +70,7 @@ public partial class PinWindow : Window
     private string _translatedText = string.Empty;
     private bool _showTranslatedText;
     private bool _translationLoading;
+    private readonly DispatcherTimer _virtualDesktopTimer;
 
     public PinWindow(BitmapSource image, IAnnotationRenderer annotationRenderer, CaptureRegion? initialRegion = null, bool initialAnnotationMode = false)
     {
@@ -76,6 +79,11 @@ public partial class PinWindow : Window
         _annotationRenderer = annotationRenderer;
         _initialRegion = initialRegion;
         _initialAnnotationMode = initialAnnotationMode;
+        _virtualDesktopTimer = new DispatcherTimer(DispatcherPriority.Background)
+        {
+            Interval = TimeSpan.FromMilliseconds(350)
+        };
+        _virtualDesktopTimer.Tick += OnVirtualDesktopTimerTick;
         PinnedImage.Source = image;
         WindowStartupLocation = initialRegion is null ? WindowStartupLocation.CenterScreen : WindowStartupLocation.Manual;
         SourceInitialized += (_, _) =>
@@ -91,6 +99,7 @@ public partial class PinWindow : Window
             ApplyInitialPosition();
             SetAnnotationMode(_initialAnnotationMode, notify: false);
             PinActionToolbar.IsOpen = true;
+            _virtualDesktopTimer.Start();
             Dispatcher.BeginInvoke(RepositionToolbar, DispatcherPriority.Loaded);
         };
         LocationChanged += (_, _) => RepositionToolbar();
@@ -100,7 +109,12 @@ public partial class PinWindow : Window
             PinActionToolbar.IsOpen = IsVisible;
             AnnotationToolbar.IsOpen = IsVisible && AnnotationMenuItem.IsChecked;
         };
-        Closed += (_, _) => { PinActionToolbar.IsOpen = false; AnnotationToolbar.IsOpen = false; };
+        Closed += (_, _) =>
+        {
+            _virtualDesktopTimer.Stop();
+            PinActionToolbar.IsOpen = false;
+            AnnotationToolbar.IsOpen = false;
+        };
     }
 
     protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
@@ -744,6 +758,32 @@ public partial class PinWindow : Window
         }
     }
 
+    private void OnVirtualDesktopTimerTick(object? sender, EventArgs eventArgs)
+    {
+        if (!IsVisible || !TopmostMenuItem.IsChecked)
+            return;
+
+        var handle = new WindowInteropHelper(this).Handle;
+        if (VirtualDesktopFollowService.TryFollowCurrentDesktop(handle))
+            Dispatcher.BeginInvoke(RepositionToolbar, DispatcherPriority.Background);
+    }
+
+    private void OnToolbarPopupOpened(object? sender, EventArgs eventArgs)
+    {
+        if (sender is not Popup { Child: Visual child })
+            return;
+
+        Dispatcher.BeginInvoke(() =>
+        {
+            if (PresentationSource.FromVisual(child) is not HwndSource popupSource)
+                return;
+
+            var owner = new WindowInteropHelper(this).Handle;
+            if (owner != IntPtr.Zero)
+                NativeMethods.SetWindowLongPtr(popupSource.Handle, NativeMethods.GwlHwndParent, owner);
+        }, DispatcherPriority.Loaded);
+    }
+
     private void OnUndoClicked(object sender, RoutedEventArgs eventArgs)
     {
         CommitText();
@@ -902,7 +942,12 @@ public partial class PinWindow : Window
         try { await new ScreenshotTool.Core.Clipboard.ClipboardService().SetImageAsync(bitmap); }
         catch { System.Windows.MessageBox.Show("剪贴板暂时被占用，请重试。", "复制失败"); }
     }
-    private void OnTopmostClicked(object sender, RoutedEventArgs eventArgs) => Topmost = TopmostMenuItem.IsChecked;
+    private void OnTopmostClicked(object sender, RoutedEventArgs eventArgs)
+    {
+        Topmost = TopmostMenuItem.IsChecked;
+        if (Topmost)
+            OnVirtualDesktopTimerTick(this, EventArgs.Empty);
+    }
     private void OnBorderClicked(object sender, RoutedEventArgs eventArgs) => ImageBorder.BorderThickness = BorderMenuItem.IsChecked ? new Thickness(1) : new Thickness(0);
     private void OnResetClicked(object sender, RoutedEventArgs eventArgs) { _viewState.Reset(); ApplyViewState(); }
     private void OnFitClicked(object sender, RoutedEventArgs e)

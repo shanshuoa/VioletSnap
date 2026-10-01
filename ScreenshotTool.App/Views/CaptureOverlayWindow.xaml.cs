@@ -284,6 +284,7 @@ public partial class CaptureOverlayWindow : Window
     private void OnToolbarOcrClicked(object sender, RoutedEventArgs e) => CompleteSelection(CaptureAction.Ocr);
     private void OnToolbarTranslateClicked(object sender, RoutedEventArgs e) => CompleteSelection(CaptureAction.Translate);
     private void OnToolbarPinClicked(object sender, RoutedEventArgs e) => CompleteSelection(CaptureAction.Pin);
+    private void OnToolbarAnnotateClicked(object sender, RoutedEventArgs e) => CompleteSelection(CaptureAction.Annotate);
     private void OnToolbarCopyClicked(object sender, RoutedEventArgs e) => CompleteSelection(CaptureAction.Copy);
     private void OnToolbarSaveClicked(object sender, RoutedEventArgs e) => CompleteSelection(CaptureAction.Save);
 

@@ -68,9 +68,12 @@ public sealed class CaptureCoordinator
             if (result is not null)
             {
                 selectedImage = CreateSelectedImage(desktop, virtualBounds, result.Region);
-                if (result.Action == CaptureAction.Pin)
+                if (result.Action is CaptureAction.Pin or CaptureAction.Annotate)
                 {
-                    _pinManager.Create(selectedImage, result.Region);
+                    _pinManager.Create(
+                        selectedImage,
+                        result.Region,
+                        initialAnnotationMode: result.Action == CaptureAction.Annotate);
                 }
             }
 
@@ -80,7 +83,9 @@ public sealed class CaptureCoordinator
             }
 
             _activeOverlays.Clear();
-            if (result is not null && result.Action != CaptureAction.Pin && selectedImage is not null)
+            if (result is not null &&
+                result.Action is not CaptureAction.Pin and not CaptureAction.Annotate &&
+                selectedImage is not null)
             {
                 await ProcessActionAsync(result.Action, selectedImage, result.Region);
             }

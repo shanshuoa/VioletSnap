@@ -121,7 +121,7 @@
       </StackPanel>
     </Border>
     <Popup x:Name="PinActionToolbar" PlacementTarget="{Binding ElementName=PinRoot}" Placement="Top"
-           StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade">
+           StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade" Opened="OnToolbarPopupOpened">
       <Border Background="#F7FFFFFF" BorderBrush="#FFB79CFF" BorderThickness="1" CornerRadius="8" Padding="5" Margin="0,0,0,8">
         <Border.Effect><DropShadowEffect Color="#704E2A8E" BlurRadius="16" ShadowDepth="3" Opacity="0.5"/></Border.Effect>
         <WrapPanel x:Name="ActionToolsPanel" Orientation="Horizontal">
@@ -141,7 +141,7 @@
         </WrapPanel>
       </Border>
     </Popup>
-    <Popup x:Name="AnnotationToolbar" Grid.Row="0" PlacementTarget="{Binding ElementName=PinRoot}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade">
+    <Popup x:Name="AnnotationToolbar" Grid.Row="0" PlacementTarget="{Binding ElementName=PinRoot}" Placement="Bottom" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade" Opened="OnToolbarPopupOpened">
       <Popup.Resources>
         <Style x:Key="ToolButton" TargetType="Button">
           <Setter Property="Width" Value="42" />

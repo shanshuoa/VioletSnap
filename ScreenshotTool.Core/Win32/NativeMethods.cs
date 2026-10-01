@@ -28,6 +28,7 @@ public static class NativeMethods
     public const uint SwpShowWindow = 0x0040;
     public const int DwmwaExtendedFrameBounds = 9;
     public const int GwlExStyle = -20;
+    public const int GwlHwndParent = -8;
     public const long WsExToolWindow = 0x00000080L;
     public delegate bool EnumWindowsProc(IntPtr window, IntPtr parameter);
 
@@ -90,6 +91,9 @@ public static class NativeMethods
 
     [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW")]
     public static extern IntPtr GetWindowLongPtr(IntPtr window, int index);
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW", SetLastError = true)]
+    public static extern IntPtr SetWindowLongPtr(IntPtr window, int index, IntPtr value);
 
     [DllImport("dwmapi.dll")]
     public static extern int DwmGetWindowAttribute(IntPtr window, int attribute, out NativeRectangle value, int size);

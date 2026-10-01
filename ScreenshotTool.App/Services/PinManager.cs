@@ -73,9 +73,9 @@ public sealed class PinManager : IDisposable
         }
     }
 
-    public PinWindow Create(BitmapSource image, CaptureRegion? initialRegion = null)
+    public PinWindow Create(BitmapSource image, CaptureRegion? initialRegion = null, bool initialAnnotationMode = false)
     {
-        var window = new PinWindow(image, _annotationRenderer, initialRegion, initialAnnotationMode: false);
+        var window = new PinWindow(image, _annotationRenderer, initialRegion, initialAnnotationMode);
         window.CopyRequested += OnCopyRequested;
         window.SaveRequested += OnSaveRequested;
         window.OcrRequested += OnOcrRequested;

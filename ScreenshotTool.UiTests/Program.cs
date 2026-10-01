@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using ScreenshotTool.App.Views;
 using ScreenshotTool.App.Services;
+using ScreenshotTool.App;
 using ScreenshotTool.Core.Annotation;
 using ScreenshotTool.Core.Configuration;
 using ScreenshotTool.Core.Hotkeys;
@@ -77,8 +78,11 @@ internal static class Program
                 pin.Show(); pin.UpdateLayout();
                 ((Button)pin.FindName("PinnedAnnotationButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                 pin.UpdateLayout();
+                application.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
                 Check(!((Button)pin.FindName("UndoButton")).IsEnabled && !((Button)pin.FindName("RedoButton")).IsEnabled, "空历史撤销重做必须禁用");
                 Check(((System.Windows.Controls.Primitives.Popup)pin.FindName("AnnotationToolbar")).IsOpen, "开启标注应显示工具栏");
+                CheckPopupOwner(pin, "PinActionToolbar");
+                CheckPopupOwner(pin, "AnnotationToolbar");
                 pin.Hide();
                 Check(!((System.Windows.Controls.Primitives.Popup)pin.FindName("PinActionToolbar")).IsOpen && !((System.Windows.Controls.Primitives.Popup)pin.FindName("AnnotationToolbar")).IsOpen, "隐藏贴图必须同时隐藏工具栏");
                 var closePin = new PinWindow(bitmap, new AnnotationRenderer());
@@ -137,6 +141,8 @@ internal static class Program
     {
         var bounds = new VirtualScreenBounds(-1920, 0, 1920, 1080);
         var overlay = new CaptureOverlayWindow(bitmap, bounds);
+        Check(((Button)overlay.FindName("CaptureAnnotationButton")).Content?.ToString() == "标", "F1 选区工具栏必须提供标注入口");
+        Check(Enum.IsDefined(CaptureAction.Annotate), "截图动作必须支持直接标注");
         var type = typeof(CaptureOverlayWindow);
         var flags = BindingFlags.Instance | BindingFlags.NonPublic;
         var original = new CaptureRegion(-1800, 100, 400, 250);
@@ -163,6 +169,18 @@ internal static class Program
         Check(cancelled && click.Handled, "已框选区域双击应退出截图");
         overlay.Close();
         Console.WriteLine("Selection checks passed: negative-screen movement, eight resize directions, selected double-click exits capture.");
+    }
+    private static void CheckPopupOwner(PinWindow window, string popupName)
+    {
+        var popup = (System.Windows.Controls.Primitives.Popup)window.FindName(popupName);
+        var child = (Visual)popup.Child;
+        var popupSource = (System.Windows.Interop.HwndSource?)PresentationSource.FromVisual(child);
+        var windowHandle = new System.Windows.Interop.WindowInteropHelper(window).Handle;
+        Check(popupSource is not null, $"{popupName} 必须具有原生窗口");
+        Check(ScreenshotTool.Core.Win32.NativeMethods.GetWindowLongPtr(
+                popupSource!.Handle,
+                ScreenshotTool.Core.Win32.NativeMethods.GwlHwndParent) == windowHandle,
+            $"{popupName} 必须归属于贴图窗口，避免跨虚拟桌面残留");
     }
     private static void CheckButtonsVisible(Window window)
     {

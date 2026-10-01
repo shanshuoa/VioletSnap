@@ -6,6 +6,7 @@ public enum CaptureAction
     Copy,
     Save,
     Pin,
+    Annotate,
     Ocr,
     Translate
 }
