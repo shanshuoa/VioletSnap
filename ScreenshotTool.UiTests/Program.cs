@@ -75,6 +75,15 @@ internal static class Program
                 window.Hide();
                 var loadingPin = new PinWindow(bitmap, new AnnotationRenderer());
                 loadingPin.Show();
+                Thread.Sleep(700);
+                typeof(PinWindow).GetMethod("OnVirtualDesktopTimerTick", BindingFlags.Instance | BindingFlags.NonPublic)!
+                    .Invoke(loadingPin, [loadingPin, EventArgs.Empty]);
+                var pinnedAcrossDesktops = (bool)typeof(PinWindow).GetField("_isPinnedAcrossVirtualDesktops", BindingFlags.Instance | BindingFlags.NonPublic)!
+                    .GetValue(loadingPin)!;
+                var followService = typeof(PinWindow).Assembly.GetType("ScreenshotTool.App.Services.VirtualDesktopFollowService")!;
+                var pinFailure = (string)followService.GetProperty("LastPinFailure", BindingFlags.Static | BindingFlags.NonPublic)!.GetValue(null)!;
+                Check(pinnedAcrossDesktops,
+                    $"勾选置顶后贴图必须固定到所有 Windows 虚拟桌面。{pinFailure}");
                 loadingPin.ShowTranslationLoading();
                 loadingPin.UpdateLayout();
                 var cancelButton = (Button)loadingPin.FindName("CancelTranslationButton");

@@ -71,6 +71,7 @@ public partial class PinWindow : Window
     private bool _showTranslatedText;
     private bool _translationLoading;
     private readonly DispatcherTimer _virtualDesktopTimer;
+    private bool _isPinnedAcrossVirtualDesktops;
 
     public PinWindow(BitmapSource image, IAnnotationRenderer annotationRenderer, CaptureRegion? initialRegion = null, bool initialAnnotationMode = false)
     {
@@ -99,6 +100,9 @@ public partial class PinWindow : Window
             ApplyInitialPosition();
             SetAnnotationMode(_initialAnnotationMode, notify: false);
             PinActionToolbar.IsOpen = true;
+            _isPinnedAcrossVirtualDesktops = VirtualDesktopFollowService.TrySetPinnedAcrossDesktops(
+                new WindowInteropHelper(this).Handle,
+                TopmostMenuItem.IsChecked);
             _virtualDesktopTimer.Start();
             Dispatcher.BeginInvoke(RepositionToolbar, DispatcherPriority.Loaded);
         };
@@ -112,6 +116,8 @@ public partial class PinWindow : Window
         Closed += (_, _) =>
         {
             _virtualDesktopTimer.Stop();
+            if (_isPinnedAcrossVirtualDesktops)
+                VirtualDesktopFollowService.TrySetPinnedAcrossDesktops(new WindowInteropHelper(this).Handle, false);
             PinActionToolbar.IsOpen = false;
             AnnotationToolbar.IsOpen = false;
         };
@@ -760,12 +766,28 @@ public partial class PinWindow : Window
 
     private void OnVirtualDesktopTimerTick(object? sender, EventArgs eventArgs)
     {
-        if (!IsVisible || !TopmostMenuItem.IsChecked)
+        if (!IsLoaded || !TopmostMenuItem.IsChecked)
             return;
 
         var handle = new WindowInteropHelper(this).Handle;
+        if (!_isPinnedAcrossVirtualDesktops)
+            _isPinnedAcrossVirtualDesktops = VirtualDesktopFollowService.TrySetPinnedAcrossDesktops(handle, true);
+        if (_isPinnedAcrossVirtualDesktops)
+            return;
+
         if (VirtualDesktopFollowService.TryFollowCurrentDesktop(handle))
-            Dispatcher.BeginInvoke(RepositionToolbar, DispatcherPriority.Background);
+        {
+            PinActionToolbar.IsOpen = false;
+            AnnotationToolbar.IsOpen = false;
+            Dispatcher.BeginInvoke(() =>
+            {
+                if (!IsVisible)
+                    return;
+                PinActionToolbar.IsOpen = true;
+                AnnotationToolbar.IsOpen = AnnotationMenuItem.IsChecked;
+                RepositionToolbar();
+            }, DispatcherPriority.Loaded);
+        }
     }
 
     private void OnToolbarPopupOpened(object? sender, EventArgs eventArgs)
@@ -947,6 +969,11 @@ public partial class PinWindow : Window
         Topmost = TopmostMenuItem.IsChecked;
         if (Topmost)
             OnVirtualDesktopTimerTick(this, EventArgs.Empty);
+        else if (_isPinnedAcrossVirtualDesktops)
+        {
+            VirtualDesktopFollowService.TrySetPinnedAcrossDesktops(new WindowInteropHelper(this).Handle, false);
+            _isPinnedAcrossVirtualDesktops = false;
+        }
     }
     private void OnBorderClicked(object sender, RoutedEventArgs eventArgs) => ImageBorder.BorderThickness = BorderMenuItem.IsChecked ? new Thickness(1) : new Thickness(0);
     private void OnResetClicked(object sender, RoutedEventArgs eventArgs) { _viewState.Reset(); ApplyViewState(); }
