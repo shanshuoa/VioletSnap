@@ -99,7 +99,7 @@ public partial class PinWindow : Window
         {
             ApplyInitialPosition();
             SetAnnotationMode(_initialAnnotationMode, notify: false);
-            PinActionToolbar.IsOpen = true;
+            PinActionToolbar.IsOpen = IsVisible && _showToolbar;
             _isPinnedAcrossVirtualDesktops = VirtualDesktopFollowService.TrySetPinnedAcrossDesktops(
                 new WindowInteropHelper(this).Handle,
                 TopmostMenuItem.IsChecked);
@@ -110,7 +110,7 @@ public partial class PinWindow : Window
         SizeChanged += (_, _) => RepositionToolbar();
         IsVisibleChanged += (_, _) =>
         {
-            PinActionToolbar.IsOpen = IsVisible;
+            PinActionToolbar.IsOpen = IsVisible && _showToolbar;
             AnnotationToolbar.IsOpen = IsVisible && AnnotationMenuItem.IsChecked;
         };
         Closed += (_, _) =>
@@ -161,12 +161,26 @@ public partial class PinWindow : Window
     public event EventHandler? OcrRequested;
     public event EventHandler? TranslateRequested;
     public event EventHandler<bool>? AnnotationModeChanged;
+    public event EventHandler<bool>? ToolbarVisibilityRequested;
+    private bool _showToolbar = true;
+
+    public void SetToolbarVisible(bool visible)
+    {
+        _showToolbar = visible;
+        ToolbarMenuItem.IsChecked = visible;
+        PinActionToolbar.IsOpen = IsVisible && visible;
+        if (PinActionToolbar.IsOpen)
+            Dispatcher.BeginInvoke(RepositionToolbar, DispatcherPriority.Loaded);
+    }
+
+    private void OnToolbarClicked(object sender, RoutedEventArgs e) =>
+        ToolbarVisibilityRequested?.Invoke(this, ToolbarMenuItem.IsChecked);
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs eventArgs)
     {
-        if (LockPositionMenuItem.IsChecked) return;
         if (AnnotationMenuItem.IsChecked) return;
         if (eventArgs.ClickCount >= 2) { Close(); return; }
+        if (LockPositionMenuItem.IsChecked) return;
         if (eventArgs.LeftButton == MouseButtonState.Pressed) DragMove();
     }
 
@@ -783,7 +797,7 @@ public partial class PinWindow : Window
             {
                 if (!IsVisible)
                     return;
-                PinActionToolbar.IsOpen = true;
+                PinActionToolbar.IsOpen = _showToolbar;
                 AnnotationToolbar.IsOpen = AnnotationMenuItem.IsChecked;
                 RepositionToolbar();
             }, DispatcherPriority.Loaded);

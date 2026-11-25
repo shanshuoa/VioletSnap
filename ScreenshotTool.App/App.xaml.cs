@@ -20,25 +20,10 @@ namespace ScreenshotTool.App;
 // VioletSnap，由作者周天开发与维护。
 public partial class App : System.Windows.Application
 {
-    private static readonly Mutex InstanceMutex;
-    private static readonly bool IsFirstInstance;
     private ServiceRegistry? _services;
-
-    static App()
-    {
-        InstanceMutex = new Mutex(initiallyOwned: true, "Local\\ScreenshotTool.SingleInstance", out var createdNew);
-        IsFirstInstance = createdNew;
-    }
 
     private void OnStartup(object sender, StartupEventArgs eventArgs)
     {
-        if (!IsFirstInstance)
-        {
-            System.Windows.MessageBox.Show("VioletSnap 已在运行，请在系统托盘中使用现有实例。", "VioletSnap", MessageBoxButton.OK, MessageBoxImage.Information);
-            Shutdown();
-            return;
-        }
-
         if (eventArgs.Args.Contains("--install-startup-task", StringComparer.OrdinalIgnoreCase))
         {
             try
@@ -82,6 +67,7 @@ public partial class App : System.Windows.Application
                 logger.Information(message);
                 trayIcon.ShowInformation(message);
             }
+            else trayIcon.ShowInformation("VioletSnap 已启动，可使用 F1 截图、F3 贴图。");
         }
         catch (Exception exception)
         {
@@ -102,7 +88,6 @@ public partial class App : System.Windows.Application
         _services.GetRequiredService<IAppLogger>().Information("应用程序退出。");
         _services.Dispose();
         _services = null;
-        InstanceMutex.ReleaseMutex();
     }
 
     private void OnExitRequested(object? sender, EventArgs eventArgs)
@@ -190,7 +175,8 @@ public partial class App : System.Windows.Application
             provider.GetRequiredService<TrayIconService>(),
             provider.GetRequiredService<IAnnotationRenderer>(),
             provider.GetRequiredService<IOcrService>(),
-            provider.GetRequiredService<ITranslationService>()));
+            provider.GetRequiredService<ITranslationService>(),
+            provider.GetRequiredService<ISettingsService>()));
         services.AddSingleton(provider => new CaptureCoordinator(
             provider.GetRequiredService<ICaptureService>(),
             provider.GetRequiredService<IAppLogger>(),

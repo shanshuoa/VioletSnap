@@ -4,10 +4,10 @@ using ScreenshotTool.App.Views;
 using ScreenshotTool.Core.Capture;
 using ScreenshotTool.Core.Clipboard;
 using ScreenshotTool.Core.Infrastructure;
-using ScreenshotTool.Core.Storage;
 using ScreenshotTool.Core.Annotation;
 using ScreenshotTool.Core.Ocr;
 using ScreenshotTool.Core.Translation;
+using ScreenshotTool.Core.Storage;
 
 namespace ScreenshotTool.App.Services;
 
@@ -42,8 +42,9 @@ public sealed class PinManager : IDisposable
     private readonly IAnnotationRenderer _annotationRenderer;
     private readonly IOcrService _ocrService;
     private readonly ITranslationService _translationService;
+    private readonly ISettingsService _settingsService;
 
-    public PinManager(IClipboardService clipboardService, IImageSaveService imageSaveService, IAppLogger logger, TrayIconService trayIcon, IAnnotationRenderer annotationRenderer, IOcrService ocrService, ITranslationService translationService)
+    public PinManager(IClipboardService clipboardService, IImageSaveService imageSaveService, IAppLogger logger, TrayIconService trayIcon, IAnnotationRenderer annotationRenderer, IOcrService ocrService, ITranslationService translationService, ISettingsService settingsService)
     {
         _clipboardService = clipboardService;
         _imageSaveService = imageSaveService;
@@ -52,20 +53,20 @@ public sealed class PinManager : IDisposable
         _annotationRenderer = annotationRenderer;
         _ocrService = ocrService;
         _translationService = translationService;
+        _settingsService = settingsService;
     }
 
     public void CreateFromClipboard()
     {
         try
         {
-            if (_clipboardService.ContainsImage() && _clipboardService.GetImage() is { } image)
+            if (_clipboardService.GetImage() is { } image)
             {
                 Create(image);
                 return;
             }
 
-            if (_clipboardService.ContainsText() &&
-                _clipboardService.GetText() is { } text &&
+            if (_clipboardService.GetText() is { } text &&
                 !string.IsNullOrWhiteSpace(text))
             {
                 var textImage = ClipboardTextRenderer.Render(text, out var truncated);
@@ -93,8 +94,10 @@ public sealed class PinManager : IDisposable
         window.OcrRequested += OnOcrRequested;
         window.TranslateRequested += OnTranslateRequested;
         window.CancelTranslationRequested += OnCancelTranslationRequested;
+        window.ToolbarVisibilityRequested += OnToolbarVisibilityRequested;
         window.Closed += OnWindowClosed;
         _windows.Add(window);
+        window.SetToolbarVisible(_settingsService.Current.Pin.ShowToolbar);
         window.Show();
         _logger.Information($"已创建贴图：Width={image.PixelWidth}, Height={image.PixelHeight}。");
         return window;
@@ -174,6 +177,7 @@ public sealed class PinManager : IDisposable
             if (!_disposing) { _lastClosedImage = window.Image; _restoreLast = window.CaptureRestoreState(); }
             if (_translations.Remove(window, out var cancellation)) cancellation.Cancel();
             window.CancelTranslationRequested -= OnCancelTranslationRequested;
+            window.ToolbarVisibilityRequested -= OnToolbarVisibilityRequested;
             window.CopyRequested -= OnCopyRequested;
             window.SaveRequested -= OnSaveRequested;
             window.OcrRequested -= OnOcrRequested;
@@ -184,6 +188,23 @@ public sealed class PinManager : IDisposable
     }
 
     private async void OnOcrRequested(object? sender, EventArgs eventArgs) => await RecognizeAsync(sender as PinWindow);
+    private void OnToolbarVisibilityRequested(object? sender, bool visible)
+    {
+        var previous = _settingsService.Current.Pin.ShowToolbar;
+        try
+        {
+            _settingsService.Current.Pin.ShowToolbar = visible;
+            _settingsService.Save();
+        }
+        catch (Exception exception)
+        {
+            _settingsService.Current.Pin.ShowToolbar = previous;
+            _logger.Error("保存贴图工具栏设置失败。", exception);
+            _trayIcon.ShowInformation("工具栏设置保存失败，请重试。");
+        }
+        foreach (var window in _windows)
+            window.SetToolbarVisible(_settingsService.Current.Pin.ShowToolbar);
+    }
     private async void OnTranslateRequested(object? sender, EventArgs eventArgs)
     {
         if (sender is PinWindow window) await TranslateInPlaceAsync(window);

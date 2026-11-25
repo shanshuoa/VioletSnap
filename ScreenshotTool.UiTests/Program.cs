@@ -60,6 +60,7 @@ internal static class Program
             Check(ClipboardTextRenderer.Render(new string('字', 15001), out var longTextTruncated).PixelHeight > 0 && longTextTruncated,
                 "超长剪贴板文本必须安全截断并继续生成贴图");
             CheckSelectionGeometry(bitmap);
+            CheckClipboardImageFormats();
             var pin = new PinWindow(bitmap, new AnnotationRenderer());
             pin.ShowTranslationResult(new OcrResult { Text = "Test" }, string.Join("\n", Enumerable.Repeat("长译文自测：内容必须完整显示，不能被原图高度裁切。", 100)));
             Check(pin.RenderedImage.PixelHeight > bitmap.PixelHeight * 5, "长译文应按文本高度增长");
@@ -102,10 +103,16 @@ internal static class Program
                 CheckPopupOwner(pin, "AnnotationToolbar");
                 pin.Hide();
                 Check(!((System.Windows.Controls.Primitives.Popup)pin.FindName("PinActionToolbar")).IsOpen && !((System.Windows.Controls.Primitives.Popup)pin.FindName("AnnotationToolbar")).IsOpen, "隐藏贴图必须同时隐藏工具栏");
+                pin.SetToolbarVisible(false);
+                pin.Show();
+                Check(!((System.Windows.Controls.Primitives.Popup)pin.FindName("PinActionToolbar")).IsOpen, "恢复窗口后上方工具栏仍应隐藏");
+                pin.SetToolbarVisible(true);
+                Check(((System.Windows.Controls.Primitives.Popup)pin.FindName("PinActionToolbar")).IsOpen, "开启开关应立即显示上方工具栏");
                 var closePin = new PinWindow(bitmap, new AnnotationRenderer());
                 var pinClosed = false;
                 closePin.Closed += (_, _) => pinClosed = true;
                 closePin.Show();
+                ((MenuItem)closePin.FindName("LockPositionMenuItem")).IsChecked = true;
                 var doubleClick = new System.Windows.Input.MouseButtonEventArgs(System.Windows.Input.Mouse.PrimaryDevice, 0, System.Windows.Input.MouseButton.Left)
                 {
                     RoutedEvent = UIElement.MouseLeftButtonDownEvent
@@ -114,7 +121,7 @@ internal static class Program
                 typeof(PinWindow).GetMethod("OnMouseLeftButtonDown", BindingFlags.Instance | BindingFlags.NonPublic,
                     binder: null, types: [typeof(object), typeof(System.Windows.Input.MouseButtonEventArgs)], modifiers: null)!
                     .Invoke(closePin, [closePin, doubleClick]);
-                Check(pinClosed, "贴图区域左键双击应关闭贴图");
+                Check(pinClosed, "锁定位置时贴图区域左键双击应关闭贴图");
                 Console.WriteLine("Window layout and toolbar lifecycle checks passed.");
             }
             Console.WriteLine("UI contract checks passed: key failure/success, long translation, source image, render cache, fixed windows.");
@@ -137,6 +144,32 @@ internal static class Program
         catch (Exception exception) { Console.Error.WriteLine(exception); return 1; }
     }
     private static void Invoke(object target, string name) => target.GetType().GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(target, [target, new RoutedEventArgs()]);
+    private static void CheckClipboardImageFormats()
+    {
+        var decode = typeof(ClipboardService).GetMethod("DecodeImage", BindingFlags.Static | BindingFlags.NonPublic)!;
+        var pixels = new byte[] { 23, 45, 67, 0 };
+        var legacy = BitmapSource.Create(1, 1, 96, 96, PixelFormats.Bgra32, null, pixels, 4);
+        var bitmapData = new DataObject();
+        bitmapData.SetData(DataFormats.Bitmap, legacy);
+        var fixedBitmap = (BitmapSource)decode.Invoke(null, [bitmapData])!;
+        Check(fixedBitmap.Format == PixelFormats.Bgr32, "全零 alpha 传统位图应转为 Bgr32");
+        var result = new byte[4]; fixedBitmap.CopyPixels(result, 4, 0);
+        Check(result[0] == 23 && result[1] == 45 && result[2] == 67, "传统位图原颜色必须保留");
+        var png = new PngBitmapEncoder(); png.Frames.Add(BitmapFrame.Create(legacy));
+        using var pngStream = new MemoryStream(); png.Save(pngStream); pngStream.Position = 0;
+        var pngData = new DataObject(); pngData.SetData("PNG", pngStream); pngData.SetData(DataFormats.Bitmap, legacy);
+        var transparent = (BitmapSource)decode.Invoke(null, [pngData])!;
+        Check(transparent.Format != PixelFormats.Bgr32, "透明 PNG 应优先于传统位图且保留 alpha");
+        var jpeg = new JpegBitmapEncoder(); jpeg.Frames.Add(BitmapFrame.Create(fixedBitmap));
+        var path = Path.Combine(Path.GetTempPath(), $"VioletSnap-{Guid.NewGuid():N}.jpg");
+        try
+        {
+            using (var output = File.Create(path)) jpeg.Save(output);
+            var fileData = new DataObject(); fileData.SetData(DataFormats.FileDrop, new[] { path });
+            Check(decode.Invoke(null, [fileData]) is BitmapSource image && image.PixelWidth == 1, "JPEG 文件应按内容解码");
+        }
+        finally { File.Delete(path); }
+    }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static void CheckTrayAutoStart()
     {

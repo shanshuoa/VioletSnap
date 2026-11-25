@@ -1,8 +1,8 @@
 #define MyAppName "VioletSnap"
 #define MyAppEnglishName "VioletSnap"
-#define MyAppVersion "1.3.2"
+#define MyAppVersion "1.3.4"
 #define MyAppPublisher "Zhou Tian"
-#define MyAppExeName "VioletSnap.exe"
+#define MyAppExeName "VioletSnap-v1.3.4.exe"
 
 [Setup]
 AppId={{6FE05B7C-D675-4C65-85BD-8A63C5BBC312}
@@ -10,7 +10,7 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-VersionInfoVersion=1.3.2.0
+VersionInfoVersion=1.3.4.0
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription={#MyAppName}安装程序
 VersionInfoCopyright=Copyright © 2026 周天. All rights reserved.
@@ -54,11 +54,13 @@ Name: "startup"; Description: "登录 Windows 后自动启动 VioletSnap"; Group
 
 [InstallDelete]
 Type: files; Name: "{app}\ZhouTianCapture.exe"
+Type: files; Name: "{app}\VioletSnap.exe"
+Type: files; Name: "{app}\VioletSnap-v1.3.2.exe"
 Type: files; Name: "{group}\周天截图.lnk"
 Type: files; Name: "{autodesktop}\周天截图.lnk"
 
 [Files]
-Source: "..\发布\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.pdb"
+Source: "..\发布目录\VioletSnap-v1.3.4-win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.pdb"
 Source: "License.txt"; DestDir: "{app}\Documents"; DestName: "最终用户许可协议.txt"; Flags: ignoreversion
 Source: "PrivacyNotice.txt"; DestDir: "{app}\Documents"; DestName: "隐私与第三方服务说明.txt"; Flags: ignoreversion
 Source: "README.txt"; DestDir: "{app}"; DestName: "使用与许可说明.txt"; Flags: ignoreversion

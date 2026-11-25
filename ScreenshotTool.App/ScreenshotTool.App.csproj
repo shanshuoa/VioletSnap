@@ -8,9 +8,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>VioletSnap</AssemblyName>
+    <StartupObject>ScreenshotTool.App.Program</StartupObject>
     <AssemblyTitle>VioletSnap</AssemblyTitle>
     <Title>VioletSnap</Title>
     <ApplicationIcon>Assets\VioletSnap.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VersionedExecutable)' == 'true'">
+    <AssemblyName>VioletSnap-v$(Version)</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ScreenshotTool.Core\ScreenshotTool.Core.csproj" />

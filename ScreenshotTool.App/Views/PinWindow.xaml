@@ -86,6 +86,7 @@
       <Separator />
       <MenuItem x:Name="BorderMenuItem" Header="显示边框" IsCheckable="True" IsChecked="True" Click="OnBorderClicked" />
       <MenuItem x:Name="TopmostMenuItem" Header="置顶" IsCheckable="True" IsChecked="True" Click="OnTopmostClicked" />
+      <MenuItem x:Name="ToolbarMenuItem" Header="显示上方工具栏" IsCheckable="True" IsChecked="True" Click="OnToolbarClicked" />
       <MenuItem x:Name="LockPositionMenuItem" Header="锁定位置" IsCheckable="True" />
       <MenuItem Header="恢复100%" Click="OnResetClicked" />
       <MenuItem Header="适应屏幕" Click="OnFitClicked" />
@@ -93,7 +94,7 @@
       <MenuItem Header="关闭" Click="OnCloseClicked" />
     </ContextMenu>
   </Window.ContextMenu>
-  <Grid x:Name="PinRoot">
+  <Grid x:Name="PinRoot" Background="#01000000">
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
       <RowDefinition x:Name="TranslationGapRow" Height="0" />

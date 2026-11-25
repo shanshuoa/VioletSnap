@@ -49,15 +49,18 @@ dotnet run --project ScreenshotTool.Tests/ScreenshotTool.Tests.csproj -c Release
 dotnet run --project ScreenshotTool.UiTests/ScreenshotTool.UiTests.csproj -c Release
 ```
 
-生成 Windows x64 自包含版本：
+生成 Windows x64 自包含分文件版本：
 
 ```powershell
 dotnet publish ScreenshotTool.App/ScreenshotTool.App.csproj `
   -c Release -r win-x64 --self-contained true `
-  -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  -p:VersionedExecutable=true -p:PublishSingleFile=false `
+  -p:DebugType=None -p:DebugSymbols=false `
+  -o 发布目录/VioletSnap-v1.3.4-win-x64
 ```
 
-安装程序脚本位于 `Installer/VioletSnap.iss`，可使用 Inno Setup 6.7 或更高版本编译。
+分发整个 `VioletSnap-v1.3.4-win-x64` 目录，EXE 名称由构建工具直接生成。安装器也已同步到 v1.3.4。
+安装 Inno Setup 后运行 `ISCC.exe Installer/VioletSnap.iss`，输出到 `安装包/VioletSnap-Setup-v1.3.4-x64.exe`。
 
 ## 隐私和 API Key
 
@@ -71,7 +74,7 @@ dotnet publish ScreenshotTool.App/ScreenshotTool.App.csproj `
 - 产品：VioletSnap
 - 作者及维护者：周天
 - 发布者：Zhou Tian
-- 当前版本：1.3.2
+- 当前版本：1.3.4
 
 为兼容旧版本，项目内部仍保留部分 `ScreenshotTool` 命名空间和本地数据目录名称。
 

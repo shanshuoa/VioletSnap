@@ -134,10 +134,8 @@ public sealed class TrayIconService : IDisposable
     {
         var item = new ToolStripMenuItem(text)
         {
-            AutoSize = false,
-            Height = 36,
-            Width = 166,
-            Padding = new Padding(12, 0, 12, 0)
+            AutoSize = true,
+            Padding = new Padding(12, 6, 12, 6)
         };
         item.Click += click;
         return item;

@@ -49,6 +49,20 @@ public partial class CaptureOverlayWindow : Window
     public event EventHandler? CaptureCancelled;
 
     public CaptureRegion? SelectedRegion { get; private set; }
+    public CaptureRegion? PinRegion
+    {
+        get
+        {
+            if (IsMouseCaptured && _dragMode == SelectionDragMode.Create)
+            {
+                var region = _selection.Selection;
+                if (region is null || region.Value.IsEmpty) return null;
+                var clamped = region.Value.ClampTo(_bounds);
+                return clamped.IsEmpty ? null : clamped;
+            }
+            return SelectedRegion is { } selected && !selected.IsEmpty ? selected.ClampTo(_bounds) : null;
+        }
+    }
 
     private void OnSourceInitialized(object? sender, EventArgs eventArgs)
     {

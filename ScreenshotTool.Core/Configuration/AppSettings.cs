@@ -25,6 +25,7 @@ public sealed class CaptureSettings
 public sealed class PinSettings
 {
     public bool Topmost { get; init; } = true;
+    public bool ShowToolbar { get; set; } = true;
     public double DefaultOpacity { get; init; } = 1.0;
 }
 

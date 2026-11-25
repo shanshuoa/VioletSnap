@@ -116,7 +116,9 @@ public sealed class CaptureCoordinator
         }
 
         var region = _activeOverlays
-            .Select(overlay => overlay.SelectedRegion)
+            .OrderByDescending(overlay => overlay.IsMouseCaptured)
+            .ThenByDescending(overlay => overlay.IsActive && overlay.PinRegion is not null)
+            .Select(overlay => overlay.PinRegion)
             .FirstOrDefault(selection => selection is not null);
         if (region is not null)
         {
