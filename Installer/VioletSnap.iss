@@ -78,8 +78,8 @@ Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: 
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "ScreenshotTool"; Flags: deletevalue uninsdeletevalue
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Parameters: "--install-startup-task"; StatusMsg: "正在配置最高权限开机启动…"; Tasks: startup; Flags: runhidden waituntilterminated
-Filename: "{app}\{#MyAppExeName}"; Description: "立即运行{#MyAppName}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Parameters: "--install-startup-task"; StatusMsg: "正在配置最高权限开机启动…"; Tasks: startup; Flags: runhidden shellexec waituntilterminated
+Filename: "{app}\{#MyAppExeName}"; Description: "立即运行{#MyAppName}"; Flags: nowait postinstall skipifsilent shellexec
 
 [UninstallRun]
 Filename: "{sys}\schtasks.exe"; Parameters: "/Delete /TN ""VioletSnap Startup"" /F"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveVioletSnapStartupTask"
